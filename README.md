@@ -22,7 +22,7 @@ Install SHERLOG
 ----------------
 **System requirement**
    - Linux x64 (Tested in CentOS 6.9, CentOS 6.10, Ubuntu 16.04 and Ubuntu 18.04)  
-   - GCC >= 4.4.7
+   - G++ >= 4.8.5
 
 
 **Install SHERLOG using source code**
