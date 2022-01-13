@@ -79,12 +79,17 @@ Run SHERLOG
    A path for working directory. The output files will be generated in the path.
 
 
-**Run SHERLOG using the parameter file** 
+**Run SHERLOG without Docker**  
 
 ```
 sherlog [parameter file]
 ```
 
+**Run SHERLOG with Docker**  
+
+```
+sherlog [parameter file]
+```
 
 
 SHERLOG output
