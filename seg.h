@@ -62,7 +62,7 @@ struct End_inTree {
 };
 
 class Node : public Seg {
-	map <int, vector<Node*>> next;
+	map <int, vector<Node*> > next;
 	vector<Node*> member;
 
   public:

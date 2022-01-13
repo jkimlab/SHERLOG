@@ -1,9 +1,0 @@
-#path of a chain files
->alignment
-chr14,Allpaths-LG	chain	./hg19.Allpaths-LG.all.chain
-
->resolution
-10000
-
->outdir
-out

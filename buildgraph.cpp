@@ -14,8 +14,11 @@ void Graph_builder::Read_chain ( const string _file, const int _tspc, const int 
 	ifstream _openFile ( _file.data() );
 	if ( _openFile.is_open() ){
 		string _ln, _tchr, _qchr;
-		int _tbeg, _tend, _qbeg, _qend, _cid, _tbeg_sub, _qbeg_sub, _tend_sub, _qend_sub, _qchr_len;
-		char _dir;
+
+		char _dir = '\0';
+		int _tbeg = 0, _tend = 0, _qbeg = 0, _qend = 0, _cid = -1;
+		int _tbeg_sub = 0, _qbeg_sub = 0, _tend_sub = 0, _qend_sub = 0;
+		int _qbeg_sub_5 = 0, _qend_sub_5 = 0, _qchr_len = 0;
 
 		vector <int> _matches;
 		vector <int> _qgaps;
@@ -80,10 +83,7 @@ void Graph_builder::Read_chain ( const string _file, const int _tspc, const int 
 						}
 					}
 					
-					int _tlen_sub = _tend_sub - _tbeg_sub;
-					int _qlen_sub = _qend_sub - _qbeg_sub;
-					
-					int _qbeg_sub_5 = _qbeg_sub, _qend_sub_5 = _qend_sub;
+					_qbeg_sub_5 = _qbeg_sub, _qend_sub_5 = _qend_sub;
 
 					if(_dir == '-'){
 						_qbeg_sub_5 = _qchr_len - _qend_sub;
@@ -124,8 +124,8 @@ void Graph_builder::Read_delta ( const string _file, const int _tspc, const int 
 	if ( _openFile.is_open() ){
 		bool header = true;
 		string _ln, _tchr, _qchr;
-		int _tbeg, _tend, _qbeg, _qend, _cid, _qchr_len;
-		char _dir;
+		int _tbeg, _tend, _qbeg, _qend;
+		char _dir = '\0';
 
 		string _spcpair = to_string ( _tspc ) + ":" + to_string ( _qspc );
 
@@ -164,7 +164,6 @@ void Graph_builder::Read_delta ( const string _file, const int _tspc, const int 
 				this->segs.push_back( _newseg );
 			}else if( _ln[0] == '>' ){
 				_tchr = _col[0].substr( 1 ), _qchr = _col[1];
-				_qchr_len = atoi( _col[3].c_str() );
 			}
 		}
 	} else {
@@ -178,8 +177,8 @@ void Graph_builder::Read_paf ( const string _file, const int _tspc, const int _q
 	ifstream _openFile ( _file.data() );
 	if ( _openFile.is_open() ){
 		string _ln, _tchr, _qchr;
-		int _tbeg, _tend, _qbeg, _qend, _cid, _qchr_len;
-		char _dir;
+		int _tbeg, _tend, _qbeg, _qend;
+		char _dir = '\0';
 
 		string _spcpair = to_string ( _tspc ) + ":" + to_string ( _qspc );
 
@@ -210,7 +209,7 @@ void Graph_builder::Read_paf ( const string _file, const int _tspc, const int _q
 	_openFile.close();
 }
 
-void Graph_builder::Build_endTree ( vector<pair<string, int>>& _sortend, int _beg, int _end, End_inTree* _anc ){
+void Graph_builder::Build_endTree ( vector<pair<string, int> >& _sortend, int _beg, int _end, End_inTree* _anc ){
 	int _mid = int( ( _end + _beg ) / 2 );
 
 	_anc->chr = *(&_sortend[_mid].first);
@@ -275,9 +274,9 @@ void Graph_builder::Find_overlapEnd ( End_inTree* _anc, Seg& _query, const int _
 
 void Graph_builder::Build_node( Graph& _gr, string _out ){
 	int _nid = 0,  _refspc = 0 ;
-	sort ( this->segs.begin(), this->segs.end(), [_refspc]( Seg& _anode, Seg& _bnode ){ return Sort_seg ( _anode, _bnode, _refspc ); } );
+	sort ( this->segs.begin(), this->segs.end(), [_refspc]( Seg _anode, Seg _bnode ){ return Sort_seg ( _anode, _bnode, _refspc ); } );
 
-	for( int _i = 0; _i < this->segs.size(); ++_i ){
+	for( int _i = 0; (unsigned int)_i < this->segs.size(); ++_i ){
 		if( _i > 0 ){ 
 			int _lastnode = _gr.nodes.size() - 1;
 			
@@ -306,7 +305,7 @@ void Graph_builder::Build_node( Graph& _gr, string _out ){
 	string _file = _out + "/segment.txt";
 	ofstream WF ( _file.data() );
 	
-	for( int _i = 0; _i < _gr.nodes.size(); ++_i ){
+	for( int _i = 0; (unsigned int)_i < _gr.nodes.size(); ++_i ){
 		_gr.nodes[_i].Print_node( WF );
 	}
 
@@ -321,7 +320,7 @@ void Graph_builder::Build_link( Graph& _gr, const int _spccnt, string _nodetype,
 		vector<Node> _sorter;
 		map<string, Node* > _id2ptr;
 
-		for( int _n = 0; _n < _gr.nodes.size(); ++_n ){
+		for( int _n = 0; (unsigned int)_n < _gr.nodes.size(); ++_n ){
 			if( _gr.nodes[_n].Contain_spc( _curspc ) ){
 				_sorter.push_back( _gr.nodes[_n] );
 				
@@ -329,11 +328,11 @@ void Graph_builder::Build_link( Graph& _gr, const int _spccnt, string _nodetype,
 			}
 		}
 
-		sort( _sorter.begin(), _sorter.end(), [_curspc]( Node& _anode, Node& _bnode ){ return Sort_seg ( _anode, _bnode, _curspc ); } ); 
+		sort( _sorter.begin(), _sorter.end(), [_curspc]( Node _anode, Node _bnode ){ return Sort_seg ( _anode, _bnode, _curspc ); } ); 
 		
 		vector<Node*> _procnode, _ongnode, _curnode;
 		_curnode.push_back( _id2ptr[_sorter[0].Return_id()] );
-		for( int _n = 1; _n < _sorter.size(); ++_n ){
+		for( int _n = 1; (unsigned int)_n < _sorter.size(); ++_n ){
 			Node* _newnode = _id2ptr[_sorter[_n].Return_id()];
 			if( ! _newnode->Contain_spc( _curspc ) ){ break; }
 
@@ -349,7 +348,7 @@ void Graph_builder::Build_link( Graph& _gr, const int _spccnt, string _nodetype,
 			}else{
 				int _cnt_ovl_cnode = 0;
 
-				for( int _c = 0; _c < _curnode.size(); ){
+				for( int _c = 0; (unsigned int)_c < _curnode.size(); ){
 					Node* _cnode = _curnode[_c];
 					int _cbeg = _cnode->Return_beg( _curspc ), _cend = _cnode->Return_end( _curspc );
 
@@ -369,7 +368,7 @@ void Graph_builder::Build_link( Graph& _gr, const int _spccnt, string _nodetype,
 
 				if( _ongnode.size() == 0 ){
 					if( _cnt_ovl_cnode != 0 ){
-						for( int _p = 0; _p < _procnode.size(); ++_p ){
+						for( int _p = 0; (unsigned int)_p < _procnode.size(); ++_p ){
 							Node* _pnode = _procnode[_p];
 							_pnode->Add_link( _curspc, _newnode );
 							
@@ -379,14 +378,14 @@ void Graph_builder::Build_link( Graph& _gr, const int _spccnt, string _nodetype,
 					}
 
 				} else {
-					for ( int _p = 0; _p < _procnode.size(); ++_p ){
+					for ( int _p = 0; (unsigned int)_p < _procnode.size(); ++_p ){
 						Node* _pnode = _procnode[_p];
 
 						int _pbeg = _pnode->Return_beg( _curspc );
 						int _pend = _pnode->Return_end( _curspc );
 
 						bool _pass = false;
-						for( int _o = 0; _o < _ongnode.size(); ++_o ){
+						for( int _o = 0; (unsigned int)_o < _ongnode.size(); ++_o ){
 							Node* _onode = _ongnode[_o];
 							int _obeg = _onode->Return_beg( _curspc );
 							int _oend = _onode->Return_end( _curspc );

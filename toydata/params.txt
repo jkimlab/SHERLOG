@@ -1,0 +1,8 @@
+>alignment
+Human,ALLPATHS-LG	chain	./hg19.Allpaths-LG.all.chain
+
+>resolution
+10000
+
+>outdir
+out

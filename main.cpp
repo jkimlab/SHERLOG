@@ -85,10 +85,10 @@ int main ( int argc, char* argv[] ){
 	cerr << "\n[6] Construct synteny in hierarchy structure" << endl;
 	cerr << "    - Construct small-scale synteny" << endl;
 	traveler.Build_synteny ( aln_gr, sf_gr, 2, aln_min_size, utils );
-	builder.Build_link ( sf_gr, spccnt, "seg", utils.Return_outdir() );
+	builder.Build_link ( sf_gr, spccnt, "small_scale", utils.Return_outdir() );
 
 	cerr << "    - Construct large-scale synteny" << endl;
-	traveler.Find_conserved_link ( sf_gr, "sf_lv2", utils.Return_outdir() );
+	traveler.Find_conserved_link ( sf_gr, "small_scale", utils.Return_outdir() );
 	traveler.Build_synteny ( sf_gr, sf_gr2, 1, aln_min_size, utils );
 	
 	return 1;

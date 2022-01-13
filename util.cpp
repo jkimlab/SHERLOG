@@ -49,6 +49,8 @@ string Util::Return_spcname ( const int _id ){
 	for(map<string, int>::iterator _it = this->spc_id.begin(); _it != this->spc_id.end(); ++_it){
 		if( _it->second == _id ) return _it->first;
 	}
+
+	return "Unknown";
 }
 
 void Split_by_space ( const string& _str, vector<string>& _splitstr ){

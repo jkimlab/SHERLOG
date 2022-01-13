@@ -13,14 +13,14 @@ void Synteny_builder::Find_conserved_link ( Graph& _gr, string _grtype, string _
 	string _file = _out + "/edge_" + _grtype + ".conserve.txt";
 	ofstream WF ( _file.data() );
 
-	for( int _n = 0; _n < _gr.nodes.size(); ++_n ){
+	for( int _n = 0; (unsigned int)_n < _gr.nodes.size(); ++_n ){
 		Node* _cnode = &( _gr.nodes[_n] );
 		char _dir = _cnode->Return_dir();
 		
 		vector<Node*> _qlinks = _cnode->Return_links( 0 );
 		vector<Node*> _tlinks = _cnode->Return_links( 1 );
 		
-		for( int _l = 0; _l < _qlinks.size(); ++_l ){
+		for( int _l = 0; (unsigned int)_l < _qlinks.size(); ++_l ){
 			if( _dir != _qlinks[_l]->Return_dir() ){ continue; }
 
 			if( _dir == '+' ){
@@ -50,7 +50,7 @@ vector<vector<Node*> > Synteny_builder::Connect_links ( Node* _cnode ){
 	vector<vector<Node*> > _allpaths;
 	
 	vector<Node*> _conserved_links = _cnode->Return_links( CONS );
-	for( int _n = 0; _n < _conserved_links.size(); ++_n ){
+	for( int _n = 0; (unsigned int)_n < _conserved_links.size(); ++_n ){
 		if( synteny.find( _conserved_links[_n]->Return_id() ) != synteny.end() ){
 			_allpaths.insert( _allpaths.end(), synteny[ _conserved_links[_n]->Return_id() ].begin(),  synteny[ _conserved_links[_n]->Return_id() ].end() );
 			synteny.erase( _conserved_links[_n]->Return_id() );
@@ -65,7 +65,7 @@ vector<vector<Node*> > Synteny_builder::Connect_links ( Node* _cnode ){
 		vector<Node*> _newpath { _cnode };
 		_allpaths.push_back( _newpath );
 	} else {
-		for( int _p = 0; _p < _allpaths.size(); ++_p ){
+		for( int _p = 0; (unsigned int)_p < _allpaths.size(); ++_p ){
 			_allpaths[_p].insert( _allpaths[_p].begin(), _cnode );
 		}
 	}
@@ -76,7 +76,7 @@ void Synteny_builder::Build_synteny ( Graph& _igr, Graph& _ogr, int _level , int
 	string _out = _util.Return_outdir();
 	synteny.clear();
 
-	for( int _n = 0; _n < _igr.nodes.size(); ++_n ){
+	for( int _n = 0; (unsigned int)_n < _igr.nodes.size(); ++_n ){
 		Node* _cnode = &( _igr.nodes[_n] );
 
 		if( ! _cnode->Return_proc() ){
@@ -90,11 +90,11 @@ void Synteny_builder::Build_synteny ( Graph& _igr, Graph& _ogr, int _level , int
 	for( mit = synteny.begin(); mit != synteny.end(); ++mit ){
 		vector<vector<Node*> > _paths = mit->second;
 
-		for( int _i = 0; _i < _paths.size(); ++_i ){
+		for( int _i = 0; (unsigned int)_i < _paths.size(); ++_i ){
 			Node* _member = _paths[_i][0] ;
 			Node* _newsf = new Node ( to_string( ++_sid ), *_member );
 
-			for( int _j = 1; _j < _paths[_i].size(); ++_j ){
+			for( int _j = 1; (unsigned int)_j < _paths[_i].size(); ++_j ){
 				_member = _paths[_i][_j];
 				_newsf->Add_member( _member );
 			}
@@ -115,22 +115,22 @@ void Synteny_builder::Build_synteny ( Graph& _igr, Graph& _ogr, int _level , int
 		ofstream WF ( _file.data() );
 		ofstream WSF ( _subfile.data() );
 		int _refspc = 0;
-		sort( _ogr.nodes.begin(), _ogr.nodes.end(), [_refspc]( Node& _anode, Node& _bnode ){ return Sort_seg ( _anode, _bnode, _refspc ); } );
-		for( int _n = 0; _n < _ogr.nodes.size(); ++_n ){
+		sort( _ogr.nodes.begin(), _ogr.nodes.end(), [_refspc]( Node _anode, Node _bnode ){ return Sort_seg ( _anode, _bnode, _refspc ); } );
+		for( int _n = 0; (unsigned int)_n < _ogr.nodes.size(); ++_n ){
 			_ogr.nodes[_n].Update_id( to_string( _newid++ ) );
 			_ogr.nodes[_n].Print_seg( WF, _util );
 
 			int _mid = 1;
 			vector<Node*> _newsf_member = _ogr.nodes[_n].Return_member();
 			string _newsf_id = _ogr.nodes[_n].Return_id();
-			for( int _m = 0; _m < _newsf_member.size(); ++_m ){
+			for( int _m = 0; (unsigned int)_m < _newsf_member.size(); ++_m ){
 				WF << "\t";
 				_newsf_member[_m]->Update_id( _newsf_id + "." + to_string( _mid++ ) );
 				_newsf_member[_m]->Print_seg( WF, _util );
 				_newsf_member[_m]->Print_seg( WSF, _util );
 
 				vector<Node*> _subsf_member = _newsf_member[_m]->Return_member();
-				for( int _sm = 0; _sm < _subsf_member.size(); ++_sm ){
+				for( int _sm = 0; (unsigned int)_sm < _subsf_member.size(); ++_sm ){
 					WSF << "\t";
 					_subsf_member[_sm]->Print_seg( WSF, _util );
 				}
@@ -146,13 +146,13 @@ void Synteny_builder::Update_link ( Graph& _gr, int _spccnt, string _out ){
 	map< string, string > _idmap;
 	map< string, Node* > _id2ptr;
 
-	for( int _n = 0; _n < _gr.nodes.size(); ++_n ){
+	for( int _n = 0; (unsigned int)_n < _gr.nodes.size(); ++_n ){
 		string _nodeid = _gr.nodes[_n].Return_id();
 		_id2ptr[_nodeid] = &( _gr.nodes[_n] );
 
 		vector<Node*> _nodemember = _gr.nodes[_n].Return_member();
 
-		for( int _m = 0; _m < _nodemember.size(); ++_m ){
+		for( int _m = 0; (unsigned int)_m < _nodemember.size(); ++_m ){
 			string _memberid = _nodemember[_m]->Return_id();
 			_idmap[_memberid] = _nodeid;
 		}
@@ -161,15 +161,15 @@ void Synteny_builder::Update_link ( Graph& _gr, int _spccnt, string _out ){
 	string _file = _out + "/edge_sf_lv2.txt";
 	ofstream WF ( _file.data() );
 
-	for( int _n = 0; _n < _gr.nodes.size(); ++_n ){
+	for( int _n = 0; (unsigned int)_n < _gr.nodes.size(); ++_n ){
 		string _nodeid = _gr.nodes[_n].Return_id();
 		vector<Node*> _nodemember = _gr.nodes[_n].Return_member();
 		
-		for( int _m = 0; _m < _nodemember.size(); ++_m ){
+		for( int _m = 0; (unsigned int)_m < _nodemember.size(); ++_m ){
 			string _memberid = _nodemember[_m]->Return_id();
 			for( int _curspc = 0; _curspc < _spccnt; ++_curspc ){
 				vector<Node*> _memberlink = _nodemember[_m]->Return_links( _curspc );
-				for(int _l = 0; _l < _memberlink.size(); ++_l ){
+				for(int _l = 0; (unsigned int)_l < _memberlink.size(); ++_l ){
 					string _linkid = _memberlink[_l]->Return_id();
 					string _updatelinkid = _idmap[_linkid];
 					
@@ -191,11 +191,11 @@ void Synteny_builder::Find_loop ( Node* _curnode, vector<Node*>& _curpath, map<p
 	_curnode->Update_process( true );
 
 	vector<Node*> _links = _curnode->Return_links( CONS );
-	for( int _l = 0; _l < _links.size(); ++_l ){
+	for( int _l = 0; (unsigned int)_l < _links.size(); ++_l ){
 		bool _alreadyused = false;
 		string _nxtnodeid = _links[_l]->Return_id();
 	
-		for( int _p = 0; _p < _curpath.size(); ++_p ){
+		for( int _p = 0; (unsigned int)_p < _curpath.size(); ++_p ){
 			if( _curpath[_p]->Return_id() == _nxtnodeid ){
 				_loop[make_pair( _curnode,  _links[_l] )] = 1;
 				_alreadyused = true;	
@@ -213,7 +213,7 @@ void Synteny_builder::Find_loop ( Node* _curnode, vector<Node*>& _curpath, map<p
 void Synteny_builder::Remove_loop ( Graph& _gr ){
 	map<pair<Node*, Node*>, int> _loop;
 
-	for( int _n = 0; _n < _gr.nodes.size(); ++_n ){
+	for( int _n = 0; (unsigned int)_n < _gr.nodes.size(); ++_n ){
 		Node* _cnode = &( _gr.nodes[_n] );
 		if( ! _cnode->Return_proc() ){
 			vector<Node*> _newpath;
@@ -226,7 +226,7 @@ void Synteny_builder::Remove_loop ( Graph& _gr ){
 		_mit->first.second->Remove_link( CONS, _mit->first.first );
 	}
 
-	for( int _n = 0; _n < _gr.nodes.size(); ++_n ){
+	for( int _n = 0; (unsigned int)_n < _gr.nodes.size(); ++_n ){
 		_gr.nodes[_n].Update_process( false );
 	}
 }

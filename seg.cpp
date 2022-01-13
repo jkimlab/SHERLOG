@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -59,7 +60,7 @@ void Seg::Print_seg ( ofstream& WF, Util& _util ){
 	WF << this->id;
 	for( map<int, string>::iterator _it=this->chr.begin(); _it != this->chr.end(); ++_it ){
 		int spc = _it->first;
-		WF << "\t" << _util.Return_spcname( spc ) << "." << this->chr[spc] << ":" << this->beg[spc] << "-" << this->end[spc];
+		WF << "\t" << _util.Return_spcname( spc ) << "." << this->chr[spc] << ":" << this->beg[spc]+1 << "-" << this->end[spc];
 	}
 	WF << "\t" << segdir << endl;
 }
@@ -106,7 +107,7 @@ void Node::Add_member ( Node* _newmem ){
 	this->member.push_back( _newmem );
 
 	vector<int> _spclist = this->Return_spc();
-	for(int _i = 0; _i < _spclist.size(); ++_i){
+	for(int _i = 0; (unsigned int)_i < _spclist.size(); ++_i){
 		int _curspc = _spclist[_i];
 
 		if( this->beg[ _curspc ] > _newmem->beg[ _curspc ] ){
@@ -120,7 +121,7 @@ void Node::Add_member ( Node* _newmem ){
 }
 
 void Node::Remove_link( const int _spc, Node* _nxt ){
-	for( int _i = 0; _i < this->next[_spc].size(); ++_i ){
+	for( int _i = 0; (unsigned int)_i < this->next[_spc].size(); ++_i ){
 		if( this->next[_spc][_i]->Return_id() == _nxt->Return_id() ){
 			this->next[_spc].erase(this->next[_spc].begin() + _i );
 			break;
@@ -136,8 +137,8 @@ void Node::Print_node ( ofstream& WF ) {
 	}
 
 	WF << "\t" << this->Return_dir() << endl;
-	WF << " - member :"; 
-	for( int _m = 0; _m < member.size(); ++_m ){
+	WF << " - Alignment source :"; 
+	for( int _m = 0; (unsigned int)_m < member.size(); ++_m ){
 		WF << " " << member[_m]->Return_id();
 	}
 	WF << endl;

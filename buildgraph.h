@@ -18,7 +18,7 @@ class Graph_builder {
 
 	int Return_segcnt () { return segs.size(); }
 
-	void Build_endTree ( vector<pair<string, int>>& _sortend, int _beg, int _end,  End_inTree* _anc );
+	void Build_endTree ( vector<pair<string, int> >& _sortend, int _beg, int _end,  End_inTree* _anc );
 	void Remove_endTree ( End_inTree* _anc );
 	void Find_overlapEnd ( End_inTree* _anc, Seg& _query, const int _curspc, vector<int>& _overlap );
 	vector<Seg> Split_seg ( const int _spccnt, const int _alnminsize );
