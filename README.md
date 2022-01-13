@@ -14,7 +14,7 @@ git clone https://github.com/jkimlab/SHERLOG.git
 cd SHERLOG
 make
 cd toydata/
-../sherlog ./config.SF
+../sherlog ./params.txt
 ```
 
 
