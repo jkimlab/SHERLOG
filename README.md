@@ -32,6 +32,7 @@ make
 ```
 
 **Using pre-compiled binary file**  
+
 Pre-compiled binary file can be obtained at https://github.com/jkimlab/SHERLOG/releases/tag/v.1.0.0.
 
 Run SHERLOG
