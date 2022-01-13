@@ -1,9 +1,9 @@
 # SHERLOG
-**A full homology-based synteny detection program**
+**A full homology-based synteny block detection program**
 
 
 Just given a pairwise alignment between two genomes in diverse formats, such as chain, delta, and paf, SHERLOG searches synteny blocks between the genomes.
-SHERLOG can find more than one synteny block for a single genomic region if it is related with duplication, and produce the result in a hierarchical manner with two different scales. In addition, SHERLOG does not rely on a reference genome. 
+Given a pairwise alignment between two genomes in diverse formats, SHERLOG can find more than one synteny block for a single genomic region if it is homologous to multiple regions in other related genomes, and produce the result in a hierarchical manner with two different scales. In addition, SHERLOG does not rely on a reference genome and supports phased genome assemblies.
 
 SHERLOG showed good performances for diverse sizes of genomes as well as a wide range of resolutions.
 
@@ -98,7 +98,7 @@ cp [input alingment file] workdir      # Copy input alignment file
 cp [parameter file] workdir            # Copy parameter file in datadir
                                          You should change input alignemnt file path in [parameter file]
 
-docker run -v [Full path of wokrdir]:/work_dir -it jkimlab/sherlog:latest [SHERLOG command]   # Do not change /work_dir
+docker run -v [Full path of wokrdir]:/work_dir -it jkimlab/sherlog:latest sherlog /work_dir/[parameter file]   # Do not change /work_dir
 ```
 
 * Example
@@ -111,6 +111,14 @@ docker run -v /mss/program/SHERLOG/workdir:/docker -it jkimlab/sherlog:latest sh
 ls ./docker/out
 ```
 
+Terminology
+----------------
+* Small-scale synteny blocks  
+Short but detailed synteny blocks fragmented by because of continuous short duplications.
+Those detailed synteny blocks can reveal the precise homologous rela-tionships between genomes, but they are prone to be affected by false positive alignments and hard to identify the global homologous relation-ships between genomes 
+
+* Large-scale synteny blocks  
+Long synteny blocks built by merging small-scale synteny blocks. The large synteny blocks enable to reveal global homologous relationships between two genomes.
 
 SHERLOG output
 ----------------
