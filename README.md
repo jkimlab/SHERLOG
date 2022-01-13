@@ -35,6 +35,15 @@ make
 
 Pre-compiled binary file can be obtained at https://github.com/jkimlab/SHERLOG/releases/tag/v.1.0.0.
 
+
+**Install SHERLOG using Docker**
+```
+git clone https://github.com/jkimlab/SHERLOG.git
+cd SHERLOG
+docker build -t jkimlab/sherlog:latest .
+```
+
+
 Run SHERLOG
 ----------------
 **Prepare a parameter file**  
