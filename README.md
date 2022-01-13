@@ -85,21 +85,23 @@ All output files will be generated in the path for output directory set in the p
 
  - large_scale_synteny.txt  
   The file containing large-scale and small-scale synteny blocks in a hierarchy.  
-  A following example shows a large-scale synteny block constructed using two different small-scale synteny blocks 
-  and related small-scale synteny blocks in 'large_scale_synteny.txt'.
-  In the case of example, the large-scale synteny block with ID 5 is searched between 20,708,973-24,428,761 region of human chromsome 14 and 0-3,715,752 of ALLPATHS-LG scaffold 2. 
-  The large-scale synteny block is constructed by merging two small-scale synteny blocks with ID 5.1 and 5.2.
+  
+ \- Format  
+ A following example shows a result of large-scale synteny block constructed using two different small-scale synteny blocks and related small-scale synteny blocks in 'large_scale_synteny.txt'.  
   
   ```
   5   Human.chr14:20708973-24428761   ALLPATHS-LG.2:0-3715752 +             # large-scale synteny block
    5.1 Human.chr14:20708973-22392249   ALLPATHS-LG.2:0-1683039 +            # small-scale synteny block
    5.2 Human.chr14:22392960-24428761   ALLPATHS-LG.2:1683796-3715752   +    # small-scale syntney block
   ```
+
+ In the case of example, the forward-oriented large-scale synteny block with ID 5 is searched between 20,708,973-24,428,761 region of human chromsome 14 and 0-3,715,752 of ALLPATHS-LG scaffold 2.
+ The large-scale synteny block is constructed by merging two forward-oriented small-scale synteny blocks with ID 5.1 and 5.2.
  
 **Supplementary output**
 
  - small_scale_synteny.txt  
-  The file containing small-scale synteny blocks and alignments in a hierarchy.
+  The file containing small-scale synteny blocks and alignments in a hierarchy. The used format is same with "large_scale_synteny.txt" file.
   
  - segment.txt  
   The file containing alignment information used for synteny block detection.
