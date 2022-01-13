@@ -24,7 +24,6 @@ Install SHERLOG
    - Linux x64 (Tested in CentOS 6.9, CentOS 6.10, Ubuntu 16.04 and Ubuntu 18.04)  
    - G++ >= 4.9
 
-
 **Install SHERLOG using source code**
 ```
 git clone https://github.com/jkimlab/SHERLOG.git
@@ -32,7 +31,8 @@ cd SHERLOG
 make
 ```
 
-
+**Using pre-compiled binary file**  
+Pre-compiled binary file can be obtained at https://github.com/jkimlab/SHERLOG/releases/tag/v.1.0.0.
 
 Run SHERLOG
 ----------------
