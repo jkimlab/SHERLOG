@@ -7,8 +7,10 @@ Given a pairwise alignment between two genomes in diverse formats, SHERLOG can f
 
 SHERLOG showed good performances for diverse sizes of genomes as well as a wide range of resolutions.
 
+
 Quick start
 ----------------
+
 ``` 
 git clone https://github.com/jkimlab/SHERLOG.git
 cd SHERLOG
@@ -20,8 +22,6 @@ cd toydata/
 
 Install SHERLOG
 ----------------
-
-
 
 **1. Install SHERLOG using source code**
 
@@ -51,6 +51,7 @@ docker build -t jkimlab/sherlog:latest .
 
 Run SHERLOG
 ----------------
+
 **Prepare a parameter file**  
 
 ```
@@ -111,6 +112,7 @@ docker run -v /mss/program/SHERLOG/workdir:/docker -it jkimlab/sherlog:latest sh
 ls ./docker/out
 ```
 
+
 Terminology
 ----------------
 * Small-scale synteny blocks  
@@ -119,6 +121,7 @@ Those detailed synteny blocks can reveal the precise homologous rela-tionships b
 
 * Large-scale synteny blocks  
 Long synteny blocks built by merging small-scale synteny blocks. The large synteny blocks enable to reveal global homologous relationships between two genomes.
+
 
 SHERLOG output
 ----------------
