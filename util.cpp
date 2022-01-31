@@ -12,7 +12,7 @@ void Util::Set_param ( const string _f_config ){
 	string _curline;
 	smatch _name;
 	regex _reg ( "^>(\\w+)" );
-	regex _reg_fle ( "^(\\S+),(\\S+)\\s+(\\w+)\\s+(\\S+)$" );
+	regex _reg_fle ( "^(\\S+),(\\S+)\\s+(\\w+)\\s+(\\S+)" );
 
 	ifstream _openfile ( _f_config.data() );
 
