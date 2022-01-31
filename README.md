@@ -1,14 +1,16 @@
 # SHERLOG
-**A full homology-based synteny detection program**
+**A full homology-based synteny block detection program**
 
 
 Just given a pairwise alignment between two genomes in diverse formats, such as chain, delta, and paf, SHERLOG searches synteny blocks between the genomes.
-SHERLOG can find more than one synteny block for a single genomic region if it is related with duplication, and produce the result in a hierarchical manner with two different scales. In addition, SHERLOG does not rely on a reference genome. 
+Given a pairwise alignment between two genomes in diverse formats, SHERLOG can find more than one synteny block for a single genomic region if it is homologous to multiple regions in other related genomes, and produce the result in a hierarchical manner with two different scales. In addition, SHERLOG does not rely on a reference genome and supports phased genome assemblies.
 
 SHERLOG showed good performances for diverse sizes of genomes as well as a wide range of resolutions.
 
+
 Quick start
 ----------------
+
 ``` 
 git clone https://github.com/jkimlab/SHERLOG.git
 cd SHERLOG
@@ -20,23 +22,26 @@ cd toydata/
 
 Install SHERLOG
 ----------------
-**System requirement**
-   - Linux x64 (Tested in CentOS 6.9, CentOS 6.10, Ubuntu 16.04 and Ubuntu 18.04)  
-   - G++ >= 4.9
 
-**Install SHERLOG using source code**
+**1. Install SHERLOG using source code**
+
+ -  System requirement: G++ >= 4.9, Make
+
 ```
 git clone https://github.com/jkimlab/SHERLOG.git
 cd SHERLOG
 make
 ```
 
-**Using pre-compiled binary file**  
+**2. Use pre-compiled binary file**  
 
-Pre-compiled binary file can be obtained at https://github.com/jkimlab/SHERLOG/releases/tag/v.1.0.0.
+ - Pre-compiled binary file can be obtained at https://github.com/jkimlab/SHERLOG/releases/tag/v.1.0.0.
 
 
-**Install SHERLOG using Docker**
+**3. Install SHERLOG using Docker**
+ 
+ -  System requirement: Docker
+
 ```
 git clone https://github.com/jkimlab/SHERLOG.git
 cd SHERLOG
@@ -46,6 +51,7 @@ docker build -t jkimlab/sherlog:latest .
 
 Run SHERLOG
 ----------------
+
 **Prepare a parameter file**  
 
 ```
@@ -79,12 +85,42 @@ Run SHERLOG
    A path for working directory. The output files will be generated in the path.
 
 
-**Run SHERLOG using the parameter file** 
+**Run SHERLOG without Docker**  
 
 ```
 sherlog [parameter file]
 ```
 
+**Run SHERLOG with Docker**  
+
+```
+mkdir workdir
+cp [input alingment file] workdir      # Copy input alignment file
+cp [parameter file] workdir            # Copy parameter file in datadir
+                                         You should change input alignemnt file path in [parameter file]
+
+docker run -v [Full path of wokrdir]:/work_dir -it jkimlab/sherlog:latest sherlog /work_dir/[parameter file]   # Do not change /work_dir
+```
+
+* Example
+```
+mkdir ./workdir
+cp ./toydata/hg19.Allpaths-LG.all.chain ./workdir
+cp ./toydata/params.txt ./workdir
+
+docker run -v /mss/program/SHERLOG/workdir:/docker -it jkimlab/sherlog:latest sherlog /work_dir/params.txt
+ls ./docker/out
+```
+
+
+Terminology
+----------------
+* Small-scale synteny blocks  
+Short but detailed synteny blocks fragmented by because of continuous short duplications.
+Those detailed synteny blocks can reveal the precise homologous rela-tionships between genomes, but they are prone to be affected by false positive alignments and hard to identify the global homologous relation-ships between genomes 
+
+* Large-scale synteny blocks  
+Long synteny blocks built by merging small-scale synteny blocks. The large synteny blocks enable to reveal global homologous relationships between two genomes.
 
 
 SHERLOG output
@@ -96,17 +132,17 @@ All output files will be generated in the path for output directory set in the p
  - large_scale_synteny.txt  
   The file containing large-scale and small-scale synteny blocks in a hierarchy.  
   
- \- Format  
- A following example shows a result of large-scale synteny block constructed using two different small-scale synteny blocks and related small-scale synteny blocks in 'large_scale_synteny.txt'.  
+      \- Format  
+      A following example shows a result of large-scale synteny block constructed using two different small-scale synteny blocks and related small-scale synteny blocks in 'large_scale_synteny.txt'.  
   
-  ```
-  5   Human.chr14:20708973-24428761   ALLPATHS-LG.2:0-3715752 +             # large-scale synteny block
-   5.1 Human.chr14:20708973-22392249   ALLPATHS-LG.2:0-1683039 +            # small-scale synteny block
-   5.2 Human.chr14:22392960-24428761   ALLPATHS-LG.2:1683796-3715752   +    # small-scale syntney block
-  ```
+      ```
+      5   Human.chr14:20708974-24428761   ALLPATHS-LG.2:1-3715752 +             # large-scale synteny block
+         5.1 Human.chr14:20708974-22392249   ALLPATHS-LG.2:1-1683039 +            # small-scale synteny block
+         5.2 Human.chr14:22392961-24428761   ALLPATHS-LG.2:1683797-3715752   +    # small-scale syntney block
+      ```
 
- In the case of example, the forward-oriented large-scale synteny block with ID 5 is searched between 20,708,973-24,428,761 region of human chromsome 14 and 0-3,715,752 of ALLPATHS-LG scaffold 2.
- The large-scale synteny block is constructed by merging two forward-oriented small-scale synteny blocks with ID 5.1 and 5.2.
+      In the case of example, the forward-oriented large-scale synteny block with ID 5 is searched between 20,708,974-24,428,761 bp region of human chromsome 14 and 1-3,715,752 bp of ALLPATHS-LG scaffold 2.
+      The large-scale synteny block is constructed by merging two forward-oriented small-scale synteny blocks with ID 5.1 and 5.2.
  
 **Supplementary output**
 
